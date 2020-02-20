@@ -1,4 +1,7 @@
 /.idea
-/target
-
 *.iml
+
+/target
+/objects/target
+/protocol/target
+/runner/target
