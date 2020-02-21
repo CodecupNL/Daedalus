@@ -9,6 +9,8 @@
 	<groupId>nl.codecup</groupId>
 	<artifactId>daedalus</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
+	<description>Daedalus is the 4th version of the Codecup Jury Software.</description>
+	<url>https://codecup.nl</url>
 
 	<packaging>pom</packaging>
 
@@ -16,12 +18,33 @@
 		<module>objects</module>
 		<module>protocol</module>
 		<module>runner</module>
+		<module>wrapper</module>
 	</modules>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.fusesource.jansi</groupId>
+			<artifactId>jansi</artifactId>
+			<version>1.18</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jopt-simple</groupId>
+			<artifactId>jopt-simple</artifactId>
+			<version>5.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.3.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 </project>

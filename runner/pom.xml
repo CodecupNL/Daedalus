@@ -17,15 +17,38 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.2.0</version>
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>nl.codecup.deadalus.Main</mainClass>
+							<mainClass>nl.codecup.deadalus.runner.Main</mainClass>
 						</manifest>
 					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<appendAssemblyId>false</appendAssemblyId>
+					<finalName>daedalus</finalName>
+					<sourceDirectory>./src</sourceDirectory>
+					<outputDirectory>${project.parent.basedir}/bin</outputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.7.2</version>
+				<configuration>
+<!--					<workingDirectory>${project.basedir}\bin</workingDirectory>-->
 				</configuration>
 			</plugin>
 		</plugins>
@@ -33,14 +56,14 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.fusesource.jansi</groupId>
-			<artifactId>jansi</artifactId>
-			<version>1.18</version>
+			<groupId>nl.codecup</groupId>
+			<artifactId>daedalus-objects</artifactId>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.jopt-simple</groupId>
-			<artifactId>jopt-simple</artifactId>
-			<version>5.0.4</version>
+			<groupId>nl.codecup</groupId>
+			<artifactId>daedalus-wrapper</artifactId>
+			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
 

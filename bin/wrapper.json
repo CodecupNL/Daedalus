@@ -1,0 +1,58 @@
+{
+  "wrappers": {
+	"class-file": {
+	  "commands": [
+		"java $1"
+	  ],
+	  "patterns": [
+		"^(.*)\\.class$"
+	  ]
+	},
+	"executable": {
+	  "commands": [
+		"./$0"
+	  ]
+	},
+	"jar-file": {
+	  "commands": [
+		"java -jar $0"
+	  ],
+	  "patterns": [
+		"^.*\\.jar$"
+	  ]
+	},
+	"java-file": {
+	  "commands": [
+		"javac $0"
+	  ],
+	  "patterns": [
+		"^(.*)\\.java$"
+	  ],
+	  "wrapper": "class-file"
+	},
+	"ocaml-file": {
+	  "commands": [
+		"python $0"
+	  ],
+	  "patterns": [
+		"^(.*)\\.ml$"
+	  ]
+	},
+	"python-file": {
+	  "commands": [
+		"python $0"
+	  ],
+	  "patterns": [
+		"^(.*)\\.py$"
+	  ]
+	},
+	"python3-file": {
+	  "commands": [
+		"python3 $0"
+	  ],
+	  "pattern": [
+		"^(.*)\\.py$"
+	  ]
+	}
+  }
+}

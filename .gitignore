@@ -1,7 +1,9 @@
 /.idea
 *.iml
 
-/target
+/bin/daedalus.jar
+
 /objects/target
 /protocol/target
 /runner/target
+/wrapper/target
