@@ -215,31 +215,28 @@ public class Daedalus implements Runnable{
 		}
 	}
 
-	public void run(){
-		//TODO Here is where the fun begins
-		//this.wrapperManager.getWrappers(new File("manager.jar"));
+	public ConfigManager getConfigManager(){
+		return this.configManager;
 	}
 
+	public Game getGame() {
+		return this.game;
+	}
 
-//		this.wm.getWrappers(null);
-//
-//
-////		AnsiConsole.systemInstall();
-////
-////		System.out.println(Ansi.ansi().fgYellow().a("Environment variables").reset().toString());
-//
-//		for(Map.Entry<String,String> me : System.getenv().entrySet()){
-//		System.err.println(me.getKey()+" = "+me.getValue());
-//	}
-//
-////		System.out.println(Ansi.ansi().fgYellow().a("Environment variables").reset().toString());
-//
-//		for(Map.Entry<Object,Object> me : System.getProperties().entrySet()){
-//		System.err.println(me.getKey()+" = "+me.getValue());
-//	}
-//
-//	//TODO Implement
-////		Manager m;
+	public Manager getManager(){
+		return this.manager;
+	}
 
+	public WrapperManager getWrapper(){
+		return this.wrapperManager;
+	}
+
+	public void run(){
+		//TODO Here is where the fun begins
+	}
+
+	public static Daedalus getInstance(){
+		return Daedalus.INSTANCE;
+	}
 
 }
