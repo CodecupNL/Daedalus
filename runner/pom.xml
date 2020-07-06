@@ -22,7 +22,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>nl.codecup.deadalus.runner.Main</mainClass>
+							<mainClass>nl.codecup.daedalus.runner.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

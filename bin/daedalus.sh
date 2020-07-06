@@ -1,2 +1,2 @@
 #!/bin/bash
-java -jar daedalus.jar
+java -jar daedalus.jar $@
