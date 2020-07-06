@@ -10,7 +10,6 @@ import nl.codecup.daedalus.wrapper.WrapperManager;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class Daedalus implements Runnable{
@@ -100,8 +99,33 @@ public class Daedalus implements Runnable{
 				}
 				System.exit(0);
 			}else if(list!=null && list.startsWith("players")){
-				System.err.println("Not implemented");
-				System.exit(0);
+				String[] parts = list.split(":");
+				if("players".equals(parts[0])){
+					String gameName = parts.length>=2?parts[1]:null;
+					if(gameName!=null){
+						File game = new File(Daedalus.DIRECTORY_GAMES,gameName);
+						File[] players = new File(game,"players").listFiles(new FileFilter(){
+
+							@Override
+							public boolean accept(File file){
+								return file.isFile();
+							}
+
+						});
+						if(players==null){
+							players = new File[0];
+						}
+						if(players.length==0){
+							System.out.println("There are no players");
+						}else{
+							System.out.println("Players:");
+							for(File p : players){
+								System.out.println(" - "+p.getName());
+							}
+						}
+						System.exit(0);
+					}
+				}
 			}
 			System.err.println("Unknown list");
 			System.exit(0);
