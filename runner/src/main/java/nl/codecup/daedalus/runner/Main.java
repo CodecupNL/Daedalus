@@ -1,4 +1,4 @@
-package nl.codecup.deadalus.runner;
+package nl.codecup.daedalus.runner;
 
 public class Main{
 

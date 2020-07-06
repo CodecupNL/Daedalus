@@ -1,4 +1,4 @@
-package nl.codecup.deadalus.runner;
+package nl.codecup.daedalus.runner;
 
 //import nl.codecup.daedalus.objects.Manager;
 //import org.fusesource.jansi.Ansi;
