@@ -3,6 +3,7 @@ package nl.codecup.daedalus.runner;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import nl.codecup.daedalus.config.ConfigManager;
 import nl.codecup.daedalus.runner.util.DaedalusHelpFormatter;
 import nl.codecup.daedalus.wrapper.WrapperManager;
 
@@ -11,8 +12,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class Daedalus implements Runnable{
-
-	private static final File FILE_WRAPPER = new File("./wrapper.json");
 
 	private static final OptionParser OPTIONPARSER = new OptionParser();
 	private static final OptionSpec<?> OPTION_NONE = OPTIONPARSER.nonOptions();
@@ -28,18 +27,18 @@ public class Daedalus implements Runnable{
 
 	private static final String VERSION = "Daedalus v1.0.0";
 
-	private WrapperManager wm;
+
+	private static final File FILE_WRAPPER = new File("./wrapper.json");
+
+	private ConfigManager configManager;
+	private WrapperManager wrapperManager;
 
 	public Daedalus(String... args){
-		OptionSet set = Daedalus.OPTIONPARSER.parse(args);
-
-		if(set.has(Daedalus.OPTION_NONE) || set.has(Daedalus.OPTION_HELP)){
-			Daedalus.OPTIONPARSER.formatHelpWith(new DaedalusHelpFormatter());
-			try{
-				Daedalus.OPTIONPARSER.printHelpOn(System.out);
-			}catch(IOException e){
-				System.err.println("Error when printing help");
-			}
+		OptionSet set = null;
+		try{
+			set = Daedalus.OPTIONPARSER.parse(args);
+		}catch(Exception e){
+			System.err.println(e.getMessage());
 			System.exit(0);
 		}
 
@@ -53,23 +52,32 @@ public class Daedalus implements Runnable{
 			System.exit(0);
 		}
 
-		System.err.println("HAS = "+set.has(Daedalus.OPTION_VERSION));
-		System.err.println("HAS ARG = "+set.hasArgument(Daedalus.OPTION_VERSION));
-
-
-
-
-
-		try{
-			this.wm =  new WrapperManager(Daedalus.FILE_WRAPPER);
-		}catch(Exception e){
-			System.err.println("Wrapper file not found");
+		if(!set.hasOptions() || set.has(Daedalus.OPTION_HELP) || !set.has(Daedalus.OPTION_GAME)){
+			Daedalus.OPTIONPARSER.formatHelpWith(new DaedalusHelpFormatter());
+			try{
+				Daedalus.OPTIONPARSER.printHelpOn(System.out);
+			}catch(IOException e){
+				System.err.println("Error when printing help");
+			}
 			System.exit(0);
 		}
+
+		System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
+
+
+
+
+
+//		try{
+//			this.wm =  new WrapperManager(Daedalus.FILE_WRAPPER);
+//		}catch(Exception e){
+//			System.err.println("Wrapper file not found");
+//			System.exit(0);
+//		}
 	}
 
 	public void run(){
-		this.wm.getWrappers(new File("manager.jar"));
+		this.wrapperManager.getWrappers(new File("manager.jar"));
 	}
 
 
