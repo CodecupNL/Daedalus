@@ -14,5 +14,17 @@ mvn install
 Note: *Maven should be installed.*
 
 ## Run
+```shell script
+cd bin
+deadalus [-d] [-f <file>] -g <game> [-m <manager>]
+```
+Note: *Java should be installed.*
 
-Here we will explain how to use Daedalus.
+### Parameters
+
+| Parameter | Description| Required |
+| --- | --- | --- |
+| -d | If set, Daedalus will print debug information. | No |
+| -f <file> | If set, defines which file to use for logging. If not set, defaults to `bin/games/${game}/logs/${time}.log`. | No |
+| -g <game> | Defines which game there will be played. | Yes |
+| -m <manager> | If set, defines which manager will be used for the competition. If not set, it defaults to `bin/managers/manager.jar`. | No |

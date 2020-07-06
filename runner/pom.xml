@@ -30,7 +30,6 @@
 					</descriptorRefs>
 					<appendAssemblyId>false</appendAssemblyId>
 					<finalName>daedalus</finalName>
-					<sourceDirectory>./src</sourceDirectory>
 					<outputDirectory>${project.parent.basedir}/bin</outputDirectory>
 				</configuration>
 				<executions>
