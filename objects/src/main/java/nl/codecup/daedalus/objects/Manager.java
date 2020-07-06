@@ -8,6 +8,10 @@ import java.io.IOException;
 
 public class Manager extends Executable{
 
+	public Manager(File name) throws IOException{
+		super(name.getName());
+	}
+
 	public Manager(String name){
 		super(name);
 	}
