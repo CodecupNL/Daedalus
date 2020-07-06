@@ -8,15 +8,22 @@ import nl.codecup.daedalus.runner.util.DaedalusHelpFormatter;
 import nl.codecup.daedalus.wrapper.WrapperManager;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class Daedalus implements Runnable{
 
+	private static final File DIRECTORY_CWD = new File(System.getProperty("user.dir"));
+
+	private static final File DIRECTORY_GAMES = new File(Daedalus.DIRECTORY_CWD,"games");
+	private static final File DIRECTORY_MANAGERS = new File(Daedalus.DIRECTORY_CWD,"managers");
+
 	private static final OptionParser OPTIONPARSER = new OptionParser();
 	private static final OptionSpec<?> OPTION_NONE = OPTIONPARSER.nonOptions();
 	private static final OptionSpec<?> OPTION_HELP = OPTIONPARSER.acceptsAll(Arrays.asList("h","help","?"),"Show help").forHelp();
-	private static final OptionSpec<?> OPTION_LIST = OPTIONPARSER.acceptsAll(Arrays.asList("l","list"),"List items of specific type").withRequiredArg().describedAs("list");
+	private static final OptionSpec<String> OPTION_LIST = OPTIONPARSER.acceptsAll(Arrays.asList("l","list"),"List items of specific type").withRequiredArg().describedAs("list");
 	private static final OptionSpec<?> OPTION_VERSION = OPTIONPARSER.acceptsAll(Arrays.asList("v","version"),"Show version");
 	private static final OptionSpec<?> OPTION_CONFIG = OPTIONPARSER.acceptsAll(Arrays.asList("c","config"),"Config file that should be used").withRequiredArg().describedAs("config").ofType(File.class);
 	private static final OptionSpec<?> OPTION_DEBUG = OPTIONPARSER.acceptsAll(Arrays.asList("d","debug"),"Show debug log");
@@ -48,7 +55,55 @@ public class Daedalus implements Runnable{
 		}
 
 		if(set.has(Daedalus.OPTION_LIST)){
-			System.out.println("[TODO]");
+			String list = set.valueOf(Daedalus.OPTION_LIST);
+			System.err.println(System.getProperty("user.dir"));
+			if("games".equals(list)){
+				File[] games = Daedalus.DIRECTORY_GAMES.listFiles(new FileFilter(){
+
+					@Override
+					public boolean accept(File file){
+						return file.isDirectory();
+					}
+
+				});
+				if(games==null){
+					games = new File[0];
+				}
+				if(games.length==0){
+					System.out.println("There are no games");
+				}else{
+					System.out.println("Games:");
+					for(File g : games){
+						System.out.println(" - "+g.getName());
+					}
+				}
+				System.exit(0);
+			}else if("managers".equals(list)){
+				File[] managers = Daedalus.DIRECTORY_MANAGERS.listFiles(new FileFilter(){
+
+					@Override
+					public boolean accept(File file){
+						return file.isFile();
+					}
+
+				});
+				if(managers==null){
+					managers = new File[0];
+				}
+				if(managers.length==0){
+					System.out.println("There are no managers");
+				}else{
+					System.out.println("Managers:");
+					for(File m : managers){
+						System.out.println(" - "+m.getName());
+					}
+				}
+				System.exit(0);
+			}else if(list!=null && list.startsWith("players")){
+				System.err.println("Not implemented");
+				System.exit(0);
+			}
+			System.err.println("Unknown list");
 			System.exit(0);
 		}
 

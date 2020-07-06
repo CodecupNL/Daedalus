@@ -3,6 +3,7 @@
 
 /bin/daedalus.jar
 
+/config/target
 /objects/target
 /protocol/target
 /runner/target
