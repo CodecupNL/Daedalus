@@ -2,8 +2,10 @@
 *.iml
 
 /bin/daedalus.jar
+/bin/managers/manager.jar
 
 /config/target
+/manager/target
 /objects/target
 /protocol/target
 /runner/target

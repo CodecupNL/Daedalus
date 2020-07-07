@@ -15,11 +15,12 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>config</module>
+		<module>manager</module>
 		<module>objects</module>
 		<module>protocol</module>
 		<module>runner</module>
 		<module>wrapper</module>
-		<module>config</module>
 	</modules>
 
 	<properties>
