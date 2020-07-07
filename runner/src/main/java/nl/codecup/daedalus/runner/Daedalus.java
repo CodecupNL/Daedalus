@@ -1,6 +1,7 @@
 package nl.codecup.daedalus.runner;
 
 import nl.codecup.daedalus.config.ConfigManager;
+import nl.codecup.daedalus.objects.Log;
 import nl.codecup.daedalus.objects.Manager;
 import nl.codecup.daedalus.runner.util.DaedalusHelpFormatter;
 import nl.codecup.daedalus.wrapper.WrapperManager;
@@ -80,22 +81,12 @@ public class Daedalus implements Runnable{
 				}
 				System.exit(0);
 			}else if("logs".equals(list)){
-				File[] logs = Daedalus.DIRECTORY_LOGS.listFiles(new FileFilter(){
-
-					@Override
-					public boolean accept(File file){
-						return file.isFile();
-					}
-
-				});
-				if(logs==null){
-					logs = new File[0];
-				}
+				Log[] logs = Log.getLogs(Daedalus.DIRECTORY_LOGS);
 				if(logs.length==0){
 					System.out.println("There are no logs");
 				}else{
 					System.out.println("Logs:");
-					for(File l : logs){
+					for(Log l : logs){
 						System.out.println(" - "+l.getName());
 					}
 				}
