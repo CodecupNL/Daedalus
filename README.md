@@ -16,7 +16,7 @@ Note: *Maven should be installed.*
 ## Run
 ```shell script
 cd bin
-deadalus [-d] [-f <file>] -g <game> [-m <manager>]
+deadalus [-c <config>] [-d] [-h|-?] [-l <list>] [-m <manager>] [-v] [-w <wrapper>]
 ```
 Note: *Java should be installed.*
 
@@ -27,7 +27,7 @@ Note: *Java should be installed.*
 | `-c <config>` | Defines which config file to use. | No |
 | `-d` | If set, Daedalus will print debug information. | No |
 | `-h` / `-?` | Show help | No |
-| `-l <type>` | List available items of certain type.<br>Supported types:<br><ul><li>`games`</li><li>`managers`</li><li>`players:<game>` (where `<game>` is a game)</li></ul> | No |
+| `-l <list>` | List available items of certain type.<br>Supported types:<br><ul><li>`games`</li><li>`managers`</li><li>`players:<game>` (where `<game>` is a game)</li></ul> | No |
 | `-m <manager>` | If set, defines which manager will be used for the competition. If not set, it defaults to `bin/managers/manager.jar`. | No |
 | `-v` | Show version. | No |
 | `-w <wrapper>` | Defines which wrapper file to use. | No |
