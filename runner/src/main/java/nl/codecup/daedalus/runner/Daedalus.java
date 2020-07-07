@@ -1,10 +1,6 @@
 package nl.codecup.daedalus.runner;
 
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
 import nl.codecup.daedalus.config.ConfigManager;
-import nl.codecup.daedalus.objects.Game;
 import nl.codecup.daedalus.objects.Manager;
 import nl.codecup.daedalus.runner.util.DaedalusHelpFormatter;
 import nl.codecup.daedalus.wrapper.WrapperManager;
@@ -14,35 +10,38 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
+
 public class Daedalus implements Runnable{
 
 	private static final File DIRECTORY_CWD = new File(System.getProperty("user.dir"));
 
 	private static final File DIRECTORY_GAMES = new File(Daedalus.DIRECTORY_CWD,"games");
+	private static final File DIRECTORY_LOGS = new File(Daedalus.DIRECTORY_CWD,"logs");
 	private static final File DIRECTORY_MANAGERS = new File(Daedalus.DIRECTORY_CWD,"managers");
 
 	private static Daedalus INSTANCE;
 
 	private static final OptionParser OPTIONPARSER = new OptionParser();
-	private static final OptionSpec<?> OPTION_NONE = OPTIONPARSER.nonOptions();
-	private static final OptionSpec<?> OPTION_HELP = OPTIONPARSER.acceptsAll(Arrays.asList("h","help","?"),"Show help").forHelp();
-	private static final OptionSpec<String> OPTION_LIST = OPTIONPARSER.acceptsAll(Arrays.asList("l","list"),"List items of specific type").withRequiredArg().describedAs("list");
-	private static final OptionSpec<?> OPTION_VERSION = OPTIONPARSER.acceptsAll(Arrays.asList("v","version"),"Show version");
-	private static final OptionSpec<File> OPTION_CONFIG = OPTIONPARSER.acceptsAll(Arrays.asList("c","config"),"Config file that should be used").withRequiredArg().describedAs("config").ofType(File.class);
-	private static final OptionSpec<?> OPTION_DEBUG = OPTIONPARSER.acceptsAll(Arrays.asList("d","debug"),"Show debug log");
-	private static final OptionSpec<File> OPTION_FILE = OPTIONPARSER.acceptsAll(Arrays.asList("f","file"),"File to save logs in").withRequiredArg().describedAs("file").ofType(File.class);
-	private static final OptionSpec<File> OPTION_GAME = OPTIONPARSER.acceptsAll(Arrays.asList("g","game"),"Game to play").requiredUnless(Daedalus.OPTION_NONE,Daedalus.OPTION_HELP,Daedalus.OPTION_LIST,Daedalus.OPTION_VERSION).withRequiredArg().describedAs("game").ofType(File.class);
-	private static final OptionSpec<File> OPTION_MANAGER = OPTIONPARSER.acceptsAll(Arrays.asList("m","manager"),"Manager that should run the game").withRequiredArg().describedAs("manager").ofType(File.class);
-	private static final OptionSpec<File> OPTION_WRAPPER = OPTIONPARSER.acceptsAll(Arrays.asList("w","wrapper"),"Wrapper that should be used to load the code").withRequiredArg().describedAs("wrapper").ofType(File.class);
+	private static final OptionSpec<?> OPTION_HELP = Daedalus.OPTIONPARSER.acceptsAll(Arrays.asList("h","help","?"),"Show help").forHelp();
+	private static final OptionSpec<String> OPTION_LIST = Daedalus.OPTIONPARSER.acceptsAll(Arrays.asList("l","list"),"List items of specific type").withRequiredArg().describedAs("list");
+	private static final OptionSpec<?> OPTION_VERSION = Daedalus.OPTIONPARSER.acceptsAll(Arrays.asList("v","version"),"Show version");
+	private static final OptionSpec<File> OPTION_CONFIG = Daedalus.OPTIONPARSER.acceptsAll(Arrays.asList("c","config"),"Config file that should be used").withRequiredArg().describedAs("config").ofType(File.class);
+	private static final OptionSpec<?> OPTION_DEBUG = Daedalus.OPTIONPARSER.acceptsAll(Arrays.asList("d","debug"),"Show debug log");
+	private static final OptionSpec<File> OPTION_MANAGER = Daedalus.OPTIONPARSER.acceptsAll(Arrays.asList("m","manager"),"Manager that should run the game").withRequiredArg().describedAs("manager").ofType(File.class);
+	private static final OptionSpec<File> OPTION_WRAPPER = Daedalus.OPTIONPARSER.acceptsAll(Arrays.asList("w","wrapper"),"Wrapper that should be used to load the code").withRequiredArg().describedAs("wrapper").ofType(File.class);
 
 	private static final String VERSION = "Daedalus v1.0.0";
 
 	private ConfigManager configManager;
-	private Game game;
 	private Manager manager;
 	private WrapperManager wrapperManager;
 
 	public Daedalus(String... args){
+		Daedalus.OPTIONPARSER.nonOptions();
+
 		OptionSet set = null;
 		try{
 			set = Daedalus.OPTIONPARSER.parse(args);
@@ -134,7 +133,7 @@ public class Daedalus implements Runnable{
 			System.exit(0);
 		}
 
-		if(!set.hasOptions() || set.has(Daedalus.OPTION_HELP) || !set.has(Daedalus.OPTION_GAME)){
+		if(set.has(Daedalus.OPTION_HELP)){
 			Daedalus.OPTIONPARSER.formatHelpWith(new DaedalusHelpFormatter());
 			try{
 				Daedalus.OPTIONPARSER.printHelpOn(System.out);
@@ -176,21 +175,6 @@ public class Daedalus implements Runnable{
 			System.err.println("Cannot load wrapper file");
 		}
 
-		File gameFile = null;
-		if(set.hasArgument(Daedalus.OPTION_GAME)){
-			File newGameFile = set.valueOf(Daedalus.OPTION_GAME);
-			if(newGameFile.isAbsolute()){
-				gameFile = newGameFile;
-			}else{
-				gameFile = new File(Daedalus.DIRECTORY_GAMES,newGameFile.getName());
-			}
-		}
-		try{
-			this.game = new Game(gameFile);
-		}catch(IOException e){
-			System.err.println("Cannot load game");
-		}
-
 		File managerFile = new File(Daedalus.DIRECTORY_MANAGERS,"manager.jar");;
 		if(set.hasArgument(Daedalus.OPTION_MANAGER)){
 			File newManagerFile = set.valueOf(Daedalus.OPTION_MANAGER);
@@ -206,10 +190,6 @@ public class Daedalus implements Runnable{
 			System.err.println("Cannot load manager");
 		}
 
-		if(set.has(Daedalus.OPTION_FILE)){
-			// Set LOG file
-		}
-
 		if(set.has(Daedalus.OPTION_DEBUG)){
 			// Set LOG debug on
 		}
@@ -219,9 +199,9 @@ public class Daedalus implements Runnable{
 		return this.configManager;
 	}
 
-	public Game getGame() {
-		return this.game;
-	}
+//	public Game getGame() {
+//		return this.game;
+//	}
 
 	public Manager getManager(){
 		return this.manager;
