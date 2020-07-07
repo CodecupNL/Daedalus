@@ -1,11 +1,11 @@
 package nl.codecup.daedalus.wrapper;
 
+import nl.codecup.daedalus.objects.Executable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-
-//import nl.codecup.daedalus.ShutdownHook;
 
 public class ExecutableThread{
 	
@@ -51,7 +51,20 @@ public class ExecutableThread{
 
 
 
-
+	public static ExecutableThread start(Executable executable) throws IOException{
+		if(!executable.isExisting()){
+			throw new IOException("This executable '"+executable.getName()+"' does not exist.");
+		}
+//		//System.err.println("Manager exists = "+.isExisting());
+//		//ExecutableThread t = this.getManager().getThread();
+//
+//		for(Wrapper w : this.getWrapperManager().getWrappers()){
+//			System.err.println(Arrays.toString(w.getCommands())+", "+Arrays.toString(w.getPatterns())+", "+w.getName()+", "+w.getWrapper());
+//		}
+//
+//		//TODO Here is where the fun begins
+		return null;
+	}
 
 
 

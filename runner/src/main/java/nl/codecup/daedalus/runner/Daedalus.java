@@ -1,13 +1,13 @@
 package nl.codecup.daedalus.runner;
 
 import nl.codecup.daedalus.config.ConfigManager;
-import nl.codecup.daedalus.wrapper.ExecutableThread;
 import nl.codecup.daedalus.objects.Game;
 import nl.codecup.daedalus.objects.Log;
 import nl.codecup.daedalus.objects.Manager;
 import nl.codecup.daedalus.objects.Player;
 import nl.codecup.daedalus.objects.Referee;
 import nl.codecup.daedalus.runner.util.DaedalusHelpFormatter;
+import nl.codecup.daedalus.wrapper.ExecutableThread;
 import nl.codecup.daedalus.wrapper.WrapperManager;
 
 import java.io.File;
@@ -230,14 +230,28 @@ public class Daedalus implements Runnable{
 		return Manager.getManagers(Daedalus.DIRECTORY_MANAGERS);
 	}
 
-	public WrapperManager getWrapper(){
+	public WrapperManager getWrapperManager(){
 		return this.wrapperManager;
 	}
 
-	public void run(){
-		ExecutableThread t = this.getManager().getThread();
+	boolean isRunning = false;
 
-		//TODO Here is where the fun begins
+	public boolean isRunning(){
+		return this.isRunning;
+	}
+
+	public void run(){
+		try{
+			ExecutableThread managerThread = ExecutableThread.start(this.getManager());
+		}catch(Exception e){
+			System.err.println(e.getMessage());
+			System.exit(0);
+		}
+		this.isRunning = true;
+		while(this.isRunning){
+			//TODO Implement protocol things
+			System.out.println("RUNNING");
+		}
 	}
 
 	public static Daedalus getInstance(){
