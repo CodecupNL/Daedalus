@@ -241,14 +241,15 @@ public class Daedalus implements Runnable{
 	}
 
 	public void run(){
+		ExecutableThread managerThread = null;
 		try{
-			ExecutableThread managerThread = ExecutableThread.start(this.getManager());
+			managerThread = ExecutableThread.start(this.getManager());
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 			System.exit(0);
 		}
 		this.isRunning = true;
-		while(this.isRunning){
+		while(this.isRunning && managerThread!=null && managerThread.isRunning()){
 			//TODO Implement protocol things
 			System.out.println("RUNNING");
 		}

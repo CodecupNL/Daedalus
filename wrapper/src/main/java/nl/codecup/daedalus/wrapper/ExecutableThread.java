@@ -47,7 +47,9 @@ public class ExecutableThread{
 //	}
 //
 
-
+	public boolean isRunning(){
+		return this.process.isAlive();
+	}
 
 
 
