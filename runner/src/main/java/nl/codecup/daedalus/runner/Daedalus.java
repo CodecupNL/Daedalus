@@ -4,11 +4,11 @@ import nl.codecup.daedalus.config.ConfigManager;
 import nl.codecup.daedalus.objects.Game;
 import nl.codecup.daedalus.objects.Log;
 import nl.codecup.daedalus.objects.Manager;
+import nl.codecup.daedalus.objects.Player;
 import nl.codecup.daedalus.runner.util.DaedalusHelpFormatter;
 import nl.codecup.daedalus.wrapper.WrapperManager;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -61,7 +61,7 @@ public class Daedalus implements Runnable{
 			String list = set.valueOf(Daedalus.OPTION_LIST);
 			System.err.println(System.getProperty("user.dir"));
 			if("games".equals(list)){
-				Game[] games = Game.getGames(Daedalus.DIRECTORY_GAMES);
+				Game[] games = this.getGames();
 				if(games.length==0){
 					System.out.println("There are no games");
 				}else{
@@ -72,7 +72,7 @@ public class Daedalus implements Runnable{
 				}
 				System.exit(0);
 			}else if("logs".equals(list)){
-				Log[] logs = Log.getLogs(Daedalus.DIRECTORY_LOGS);
+				Log[] logs = this.getLogs();
 				if(logs.length==0){
 					System.out.println("There are no logs");
 				}else{
@@ -83,7 +83,7 @@ public class Daedalus implements Runnable{
 				}
 				System.exit(0);
 			}else if("managers".equals(list)){
-				Manager[] managers = Manager.getManagers(Daedalus.DIRECTORY_MANAGERS);
+				Manager[] managers = this.getManagers();
 				if(managers.length==0){
 					System.out.println("There are no managers");
 				}else{
@@ -95,31 +95,52 @@ public class Daedalus implements Runnable{
 				System.exit(0);
 			}else if(list!=null && list.startsWith("players")){
 				String[] parts = list.split(":");
-				if("players".equals(parts[0])){
-					String gameName = parts.length>=2?parts[1]:null;
-					if(gameName!=null){
-						File game = new File(Daedalus.DIRECTORY_GAMES,gameName);
-						File[] players = new File(game,"players").listFiles(new FileFilter(){
-
-							@Override
-							public boolean accept(File file){
-								return file.isFile();
-							}
-
-						});
-						if(players==null){
-							players = new File[0];
+				String gameName = parts.length>=2?parts[1]:null;
+				if("players".equals(parts[0]) && gameName!=null){
+					Game game = null;
+					for(Game g : this.getGames()){
+						if(gameName.equals(g.getName())){
+							game = g;
+							break;
 						}
-						if(players.length==0){
-							System.out.println("There are no players");
-						}else{
-							System.out.println("Players:");
-							for(File p : players){
-								System.out.println(" - "+p.getName());
-							}
-						}
+					}
+					if(game==null){
+						System.out.println("Unknown game");
 						System.exit(0);
 					}
+					Player[] players = game.getPlayers();
+					if(players.length==0){
+						System.out.println("There are no players");
+					}else{
+						System.out.println("Players:");
+						for(Player p : players){
+							System.out.println(" - "+p.getName());
+						}
+					}
+					System.exit(0);
+//
+//
+//					File game = new File(Daedalus.DIRECTORY_GAMES,gameName);
+//					File[] players = new File(game,"players").listFiles(new FileFilter(){
+//
+//						@Override
+//						public boolean accept(File file){
+//							return file.isFile();
+//						}
+//
+//					});
+//					if(players==null){
+//						players = new File[0];
+//					}
+//					if(players.length==0){
+//						System.out.println("There are no players");
+//					}else{
+//						System.out.println("Players:");
+//						for(File p : players){
+//							System.out.println(" - "+p.getName());
+//						}
+//					}
+//					System.exit(0);
 				}
 			}
 			System.err.println("Unknown list");
@@ -177,11 +198,7 @@ public class Daedalus implements Runnable{
 				managerFile = new File(Daedalus.DIRECTORY_MANAGERS,newManagerFile.getName());
 			}
 		}
-		try{
-			this.manager = new Manager(managerFile);
-		}catch(IOException e){
-			System.err.println("Cannot load manager");
-		}
+		this.manager = new Manager(managerFile);
 
 		if(set.has(Daedalus.OPTION_DEBUG)){
 			// Set LOG debug on
@@ -192,12 +209,20 @@ public class Daedalus implements Runnable{
 		return this.configManager;
 	}
 
-//	public Game getGame() {
-//		return this.game;
-//	}
+	public Game[] getGames(){
+		return Game.getGames(Daedalus.DIRECTORY_GAMES);
+	}
+
+	public Log[] getLogs(){
+		return Log.getLogs(Daedalus.DIRECTORY_LOGS);
+	}
 
 	public Manager getManager(){
 		return this.manager;
+	}
+
+	public Manager[] getManagers(){
+		return Manager.getManagers(Daedalus.DIRECTORY_MANAGERS);
 	}
 
 	public WrapperManager getWrapper(){
