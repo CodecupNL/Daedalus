@@ -5,6 +5,8 @@ import java.io.FileFilter;
 
 public class Log{
 
+	private static boolean debug;
+
 	private final File file;
 
 	public Log(File logFile){
@@ -32,6 +34,10 @@ public class Log{
 			logs[i] = new Log(logFiles[i]);
 		}
 		return logs;
+	}
+
+	public static void setDebug(boolean debug){
+		Log.debug = debug;
 	}
 
 }
