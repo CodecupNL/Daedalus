@@ -1,6 +1,7 @@
 package nl.codecup.daedalus.runner;
 
 import nl.codecup.daedalus.config.ConfigManager;
+import nl.codecup.daedalus.wrapper.ExecutableThread;
 import nl.codecup.daedalus.objects.Game;
 import nl.codecup.daedalus.objects.Log;
 import nl.codecup.daedalus.objects.Manager;
@@ -234,6 +235,8 @@ public class Daedalus implements Runnable{
 	}
 
 	public void run(){
+		ExecutableThread t = this.getManager().getThread();
+
 		//TODO Here is where the fun begins
 	}
 

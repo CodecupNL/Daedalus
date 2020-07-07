@@ -1,4 +1,4 @@
-package nl.codecup.daedalus.protocol;
+package nl.codecup.daedalus.wrapper;
 
 import java.io.File;
 
