@@ -1,4 +1,4 @@
 {
-  "manager": "",
-  "debug": false
+  "debug": false,
+  "manager": "manager.jar"
 }

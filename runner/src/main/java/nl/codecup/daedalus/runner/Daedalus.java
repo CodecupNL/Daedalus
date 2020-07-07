@@ -194,7 +194,7 @@ public class Daedalus implements Runnable{
 			System.err.println("Cannot load wrapper file");
 		}
 
-		File managerFile = new File(Daedalus.DIRECTORY_MANAGERS,"manager.jar");;
+		File managerFile = new File(Daedalus.DIRECTORY_MANAGERS,this.configManager.manager());
 		if(set.hasArgument(Daedalus.OPTION_MANAGER)){
 			File newManagerFile = set.valueOf(Daedalus.OPTION_MANAGER);
 			if(newManagerFile.isAbsolute()){
@@ -205,7 +205,7 @@ public class Daedalus implements Runnable{
 		}
 		this.manager = new Manager(managerFile);
 
-		if(set.has(Daedalus.OPTION_DEBUG)){
+		if(set.has(Daedalus.OPTION_DEBUG) || this.configManager.debug()){
 			// Set LOG debug on
 		}
 	}
