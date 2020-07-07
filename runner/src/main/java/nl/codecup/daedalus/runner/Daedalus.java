@@ -83,22 +83,12 @@ public class Daedalus implements Runnable{
 				}
 				System.exit(0);
 			}else if("managers".equals(list)){
-				File[] managers = Daedalus.DIRECTORY_MANAGERS.listFiles(new FileFilter(){
-
-					@Override
-					public boolean accept(File file){
-						return file.isFile();
-					}
-
-				});
-				if(managers==null){
-					managers = new File[0];
-				}
+				Manager[] managers = Manager.getManagers(Daedalus.DIRECTORY_MANAGERS);
 				if(managers.length==0){
 					System.out.println("There are no managers");
 				}else{
 					System.out.println("Managers:");
-					for(File m : managers){
+					for(Manager m : managers){
 						System.out.println(" - "+m.getName());
 					}
 				}
