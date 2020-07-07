@@ -248,9 +248,14 @@ public class Daedalus implements Runnable{
 			System.exit(0);
 		}
 		this.isRunning = true;
-		while(this.isRunning && managerThread!=null && managerThread.isRunning()){
-			//TODO Implement protocol things
-			System.out.println("RUNNING");
+		while(this.isRunning && managerThread.isRunning()){
+			try{
+				byte[] buf = new byte[managerThread.STDOUT.available()];
+				managerThread.STDOUT.read(buf);
+				System.out.println(new String(buf));
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 

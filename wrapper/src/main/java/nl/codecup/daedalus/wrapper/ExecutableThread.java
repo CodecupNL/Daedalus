@@ -48,7 +48,12 @@ public class ExecutableThread{
 //
 
 	public boolean isRunning(){
-		return this.process.isAlive();
+		try{
+			this.process.exitValue();
+		}catch(IllegalThreadStateException e){
+			return true;
+		}
+		return false;
 	}
 
 
@@ -57,6 +62,13 @@ public class ExecutableThread{
 		if(!executable.isExisting()){
 			throw new IOException("This executable '"+executable.getName()+"' does not exist.");
 		}
+
+		//TODO Now only Java is supported
+		String[] command = new String[]{"java","-jar",executable.getFile().getAbsolutePath()};
+		return new ExecutableThread(Runtime.getRuntime().exec(command,new String[0],executable.getFile().getParentFile()));
+
+
+
 //		//System.err.println("Manager exists = "+.isExisting());
 //		//ExecutableThread t = this.getManager().getThread();
 //
@@ -65,7 +77,7 @@ public class ExecutableThread{
 //		}
 //
 //		//TODO Here is where the fun begins
-		return null;
+	//	return null;
 	}
 
 

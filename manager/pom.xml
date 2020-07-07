@@ -22,7 +22,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>nl.codecup.daedalus.runner.Main</mainClass>
+							<mainClass>nl.codecup.daedalus.manager.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -56,17 +56,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>nl.codecup</groupId>
-			<artifactId>daedalus-config</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>nl.codecup</groupId>
 			<artifactId>daedalus-objects</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>nl.codecup</groupId>
-			<artifactId>daedalus-wrapper</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
