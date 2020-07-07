@@ -79,6 +79,27 @@ public class Daedalus implements Runnable{
 					}
 				}
 				System.exit(0);
+			}else if("logs".equals(list)){
+				File[] logs = Daedalus.DIRECTORY_LOGS.listFiles(new FileFilter(){
+
+					@Override
+					public boolean accept(File file){
+						return file.isFile();
+					}
+
+				});
+				if(logs==null){
+					logs = new File[0];
+				}
+				if(logs.length==0){
+					System.out.println("There are no logs");
+				}else{
+					System.out.println("Logs:");
+					for(File l : logs){
+						System.out.println(" - "+l.getName());
+					}
+				}
+				System.exit(0);
 			}else if("managers".equals(list)){
 				File[] managers = Daedalus.DIRECTORY_MANAGERS.listFiles(new FileFilter(){
 
