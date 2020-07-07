@@ -5,6 +5,7 @@ import nl.codecup.daedalus.objects.Game;
 import nl.codecup.daedalus.objects.Log;
 import nl.codecup.daedalus.objects.Manager;
 import nl.codecup.daedalus.objects.Player;
+import nl.codecup.daedalus.objects.Referee;
 import nl.codecup.daedalus.runner.util.DaedalusHelpFormatter;
 import nl.codecup.daedalus.wrapper.WrapperManager;
 
@@ -118,29 +119,32 @@ public class Daedalus implements Runnable{
 						}
 					}
 					System.exit(0);
-//
-//
-//					File game = new File(Daedalus.DIRECTORY_GAMES,gameName);
-//					File[] players = new File(game,"players").listFiles(new FileFilter(){
-//
-//						@Override
-//						public boolean accept(File file){
-//							return file.isFile();
-//						}
-//
-//					});
-//					if(players==null){
-//						players = new File[0];
-//					}
-//					if(players.length==0){
-//						System.out.println("There are no players");
-//					}else{
-//						System.out.println("Players:");
-//						for(File p : players){
-//							System.out.println(" - "+p.getName());
-//						}
-//					}
-//					System.exit(0);
+				}
+			}else if(list!=null && list.startsWith("referees")){
+				String[] parts = list.split(":");
+				String gameName = parts.length>=2?parts[1]:null;
+				if("referees".equals(parts[0]) && gameName!=null){
+					Game game = null;
+					for(Game g : this.getGames()){
+						if(gameName.equals(g.getName())){
+							game = g;
+							break;
+						}
+					}
+					if(game==null){
+						System.out.println("Unknown game");
+						System.exit(0);
+					}
+					Referee[] referees = game.getReferees();
+					if(referees.length==0){
+						System.out.println("There are no referees");
+					}else{
+						System.out.println("Referees:");
+						for(Referee r : referees){
+							System.out.println(" - "+r.getName());
+						}
+					}
+					System.exit(0);
 				}
 			}
 			System.err.println("Unknown list");

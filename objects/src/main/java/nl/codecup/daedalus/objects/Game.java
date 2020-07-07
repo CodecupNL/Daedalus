@@ -7,10 +7,12 @@ public class Game{
 
 	private final File file;
 	private final File DIRECTORY_PLAYERS;
+	private final File DIRECTORY_REFEREES;
 
 	public Game(File gameDirectory){
 		this.file = gameDirectory;
-		this.DIRECTORY_PLAYERS = new File(this.file,"games");
+		this.DIRECTORY_PLAYERS = new File(this.file,"players");
+		this.DIRECTORY_REFEREES = new File(this.file,"referees");
 	}
 
 	public String getName(){
@@ -19,6 +21,10 @@ public class Game{
 
 	public Player[] getPlayers(){
 		return Player.getPlayers(this.DIRECTORY_PLAYERS);
+	}
+
+	public Referee[] getReferees(){
+		return Referee.getReferees(this.DIRECTORY_REFEREES);
 	}
 
 	public static Game[] getGames(File gamesDirectory){
