@@ -1,22 +1,37 @@
 package nl.codecup.daedalus.objects;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileFilter;
 
 public class Game{
-	
-	private final String name;
 
-	public Game(File name) throws IOException {
-		this.name = name.getName();
+	private final File file;
+
+	public Game(File gameDirectory){
+		this.file = gameDirectory;
 	}
-	
-	public Game(String name){
-		this.name = name;
-	}
-	
+
 	public String getName(){
-		return this.name;
+		return this.file.getName();
+	}
+
+	public static Game[] getGames(File gamesDirectory){
+		File[] gameDirectories = gamesDirectory.listFiles(new FileFilter(){
+
+			@Override
+			public boolean accept(File file){
+				return file.isDirectory();
+			}
+
+		});
+		if(gameDirectories==null){
+			return new Game[0];
+		}
+		Game[] games = new Game[gameDirectories.length];
+		for(int i=0;i<games.length;i++){
+			games[i] = new Game(gameDirectories[i]);
+		}
+		return games;
 	}
 
 }

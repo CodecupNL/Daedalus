@@ -5,7 +5,7 @@ import java.io.FileFilter;
 
 public class Log{
 
-	private File file;
+	private final File file;
 
 	public Log(File logFile){
 		this.file = logFile;

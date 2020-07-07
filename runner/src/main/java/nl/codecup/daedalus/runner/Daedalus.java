@@ -1,6 +1,7 @@
 package nl.codecup.daedalus.runner;
 
 import nl.codecup.daedalus.config.ConfigManager;
+import nl.codecup.daedalus.objects.Game;
 import nl.codecup.daedalus.objects.Log;
 import nl.codecup.daedalus.objects.Manager;
 import nl.codecup.daedalus.runner.util.DaedalusHelpFormatter;
@@ -60,22 +61,12 @@ public class Daedalus implements Runnable{
 			String list = set.valueOf(Daedalus.OPTION_LIST);
 			System.err.println(System.getProperty("user.dir"));
 			if("games".equals(list)){
-				File[] games = Daedalus.DIRECTORY_GAMES.listFiles(new FileFilter(){
-
-					@Override
-					public boolean accept(File file){
-						return file.isDirectory();
-					}
-
-				});
-				if(games==null){
-					games = new File[0];
-				}
+				Game[] games = Game.getGames(Daedalus.DIRECTORY_GAMES);
 				if(games.length==0){
 					System.out.println("There are no games");
 				}else{
 					System.out.println("Games:");
-					for(File g : games){
+					for(Game g : games){
 						System.out.println(" - "+g.getName());
 					}
 				}
