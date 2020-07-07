@@ -8,14 +8,8 @@ import java.io.FileFilter;
 
 public class Manager extends Executable{
 
-	private final File file;
-
 	public Manager(File managerFile){
-		this.file = managerFile;
-	}
-
-	public String getName(){
-		return this.file.getName();
+		super(managerFile);
 	}
 
 	public static Manager[] getManagers(File managersDirectory){

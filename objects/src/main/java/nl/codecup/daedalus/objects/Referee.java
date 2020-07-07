@@ -8,14 +8,8 @@ import java.io.FileFilter;
 
 public class Referee extends Executable{
 
-	private final File file;
-
 	public Referee(File refereeFile){
-		this.file = refereeFile;
-	}
-
-	public String getName(){
-		return this.file.getName();
+		super(refereeFile);
 	}
 
 	public static Referee[] getReferees(File refereesDirectory){

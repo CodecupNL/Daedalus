@@ -8,14 +8,8 @@ import java.io.FileFilter;
 
 public class Player extends Executable{
 
-	private final File file;
-
 	public Player(File playerFile){
-		this.file = playerFile;
-	}
-
-	public String getName(){
-		return this.file.getName();
+		super(playerFile);
 	}
 
 	public static Player[] getPlayers(File playersDirectory){
