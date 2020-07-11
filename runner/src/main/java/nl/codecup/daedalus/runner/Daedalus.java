@@ -37,6 +37,8 @@ public class Daedalus implements Runnable{
 	private static final OptionSpec<File> OPTION_MANAGER = Daedalus.OPTIONPARSER.acceptsAll(Arrays.asList("m","manager"),"Manager that should run the game").withRequiredArg().describedAs("manager").ofType(File.class);
 	private static final OptionSpec<File> OPTION_WRAPPER = Daedalus.OPTIONPARSER.acceptsAll(Arrays.asList("w","wrapper"),"Wrapper that should be used to load the code").withRequiredArg().describedAs("wrapper").ofType(File.class);
 
+	private static final String TAG = "DAEDALUS";
+
 	private static final String VERSION = "Daedalus v1.0.0";
 
 	private ConfigManager configManager;
@@ -250,9 +252,13 @@ public class Daedalus implements Runnable{
 		this.isRunning = true;
 		while(this.isRunning && managerThread.isRunning()){
 			try{
-				byte[] buf = new byte[managerThread.STDOUT.available()];
-				managerThread.STDOUT.read(buf);
-				System.out.println(new String(buf));
+				if(managerThread.STDERR.available()>0){
+					byte[] buf = new byte[managerThread.STDERR.available()];
+					managerThread.STDERR.read(buf);
+					System.out.print(new String(buf));
+					//System.out.println("["+buf.length+"] "+new String(buf).trim());
+					//Thread.sleep(1000);
+				}
 			}catch(Exception e){
 				e.printStackTrace();
 			}

@@ -1,11 +1,11 @@
 package nl.codecup.daedalus.wrapper;
 
-import nl.codecup.daedalus.objects.Executable;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+
+import nl.codecup.daedalus.objects.Executable;
 
 public class ExecutableThread{
 	
