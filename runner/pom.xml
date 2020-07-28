@@ -69,11 +69,6 @@
 			<artifactId>daedalus-wrapper</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.fusesource.jansi</groupId>
-			<artifactId>jansi</artifactId>
-			<version>1.18</version>
-		</dependency>
 
 	</dependencies>
 
