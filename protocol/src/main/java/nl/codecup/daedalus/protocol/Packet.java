@@ -12,7 +12,7 @@ public class Packet{
 	private final byte action;
 	private final short length;
 	private final byte[] data;
-	
+
 	public Packet(DataInputStream dis) throws IOException{		
 		this.from = dis.readByte();
 		this.to = dis.readByte();

@@ -5,9 +5,17 @@ import java.io.FileFilter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.sun.tools.jdi.Packet;
+import nl.codecup.daedalus.protocol.IO;
+import nl.codecup.daedalus.protocol.Protocol;
 import org.fusesource.jansi.Ansi;
 
 public class Log{
+
+	public static final byte LEVEL_INFO = 0x01;
+	public static final byte LEVEL_DEBUG = 0x02;
+	public static final byte LEVEL_WARNING = 0x03;
+	public static final byte LEVEL_ERROR = 0x04;
 
 	private static boolean DEBUG;
 	private static SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -46,23 +54,47 @@ public class Log{
 	}
 
 	public static void debug(String tag,String message){
-		System.err.println(Ansi.ansi().fgBlue().a(Log.time()+" ["+tag+"] [DEBUG]: "+message).reset().toString());
+		Date d = new Date();
+		try{
+			Protocol.log(d,tag,Log.LEVEL_DEBUG,message).toStream(IO.STDOUT);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		System.err.println(Ansi.ansi().fgBlue().a(Log.time(d)+" ["+tag+"] [DEBUG]: "+message).reset().toString());
 	}
 
 	public static void error(String tag,String message){
-		System.err.println(Ansi.ansi().fgRed().a(Log.time()+" ["+tag+"] [ERROR]: "+message).reset().toString());
+		Date d = new Date();
+		try{
+			Protocol.log(d,tag,Log.LEVEL_ERROR,message).toStream(IO.STDOUT);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		System.err.println(Ansi.ansi().fgRed().a(Log.time(d)+" ["+tag+"] [ERROR]: "+message).reset().toString());
 	}
 
 	public static void info(String tag,String message){
-		System.err.println(Ansi.ansi().fgBrightGreen().a(Log.time()+" ["+tag+"] [INFO]: "+message).reset().toString());
+		Date d = new Date();
+		try{
+			Protocol.log(d,tag,Log.LEVEL_INFO,message).toStream(IO.STDOUT);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		System.err.println(Ansi.ansi().fgBrightGreen().a(Log.time(d)+" ["+tag+"] [INFO]: "+message).reset().toString());
 	}
 
 	public static void warning(String tag,String message){
-		System.err.println(Ansi.ansi().fgYellow().a(Log.time()+" ["+tag+"] [WARNING]: "+message).reset().toString());
+		Date d = new Date();
+		try{
+			Protocol.log(d,tag,Log.LEVEL_WARNING,message).toStream(IO.STDOUT);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		System.err.println(Ansi.ansi().fgYellow().a(Log.time(d)+" ["+tag+"] [WARNING]: "+message).reset().toString());
 	}
 
-	private static String time(){
-		return Log.FORMAT.format(new Date());
+	private static String time(Date d){
+		return Log.FORMAT.format(d);
 	}
 
 }
