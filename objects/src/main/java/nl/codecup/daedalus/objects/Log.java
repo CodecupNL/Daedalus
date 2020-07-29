@@ -5,7 +5,6 @@ import java.io.FileFilter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.sun.tools.jdi.Packet;
 import nl.codecup.daedalus.protocol.IO;
 import nl.codecup.daedalus.protocol.Protocol;
 import org.fusesource.jansi.Ansi;
