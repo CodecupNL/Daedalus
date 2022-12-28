@@ -4,7 +4,7 @@ import java.io.File;
 
 public abstract class Executable{
 
-	private final File file;
+	protected final File file;
 
 	public Executable(File executableFile){
 		this.file = executableFile;
@@ -20,6 +20,13 @@ public abstract class Executable{
 
 	public boolean isExisting(){
 		return this.file.exists();
+	}
+
+	@Override
+	public String toString() {
+		return "Executable{" +
+				"file=" + file +
+				'}';
 	}
 
 }

@@ -46,4 +46,11 @@ public class Game{
 		return games;
 	}
 
+	@Override
+	public String toString() {
+		return "Game{" +
+				"file=" + file +
+				'}';
+	}
+
 }

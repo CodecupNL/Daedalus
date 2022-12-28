@@ -27,12 +27,17 @@
 		</plugins>
 	</build>
 
-<!--	<dependencies>-->
+	<dependencies>
 <!--		<dependency>-->
 <!--			<groupId>nl.codecup</groupId>-->
 <!--			<artifactId>daedalus-objects</artifactId>-->
 <!--			<version>1.0.0-SNAPSHOT</version>-->
 <!--		</dependency>-->
-<!--	</dependencies>-->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20210307</version>
+		</dependency>
+	</dependencies>
 
 </project>

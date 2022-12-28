@@ -1,9 +1,9 @@
 package nl.codecup.daedalus.manager;
 
-public class Main{
+class Main{
 
 	public static void main(String... args){
-		new DaedalusManager().run();
+		new Thread(new DaedalusManager(),"Daedalus Manager").start();
 	}
 
 }

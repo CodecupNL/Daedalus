@@ -1,24 +1,35 @@
 package nl.codecup.daedalus.runner;
 
 import nl.codecup.daedalus.config.ConfigManager;
+import nl.codecup.daedalus.objects.Battle;
 import nl.codecup.daedalus.objects.Game;
 import nl.codecup.daedalus.objects.Log;
 import nl.codecup.daedalus.objects.Manager;
 import nl.codecup.daedalus.objects.Player;
 import nl.codecup.daedalus.objects.Referee;
+import nl.codecup.daedalus.protocol.IO;
+import nl.codecup.daedalus.protocol.LineInputStream;
+import nl.codecup.daedalus.protocol.Packet;
+import nl.codecup.daedalus.protocol.PacketListener;
 import nl.codecup.daedalus.runner.util.DaedalusHelpFormatter;
 import nl.codecup.daedalus.wrapper.ExecutableThread;
 import nl.codecup.daedalus.wrapper.WrapperManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Ref;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import org.json.JSONArray;
 
-public class Daedalus implements Runnable{
+public class Daedalus implements PacketListener,Runnable{
 
 	private static final File DIRECTORY_CWD = new File(System.getProperty("user.dir"));
 
@@ -234,35 +245,199 @@ public class Daedalus implements Runnable{
 		return this.wrapperManager;
 	}
 
-	boolean isRunning = false;
+	private boolean isRunning = true;
 
 	public boolean isRunning(){
 		return this.isRunning;
 	}
 
+	public ExecutableThread managerThread = null;
+
+	private Map<String,DaedalusBattle> battles = new HashMap<>();
+
 	@Override
 	public void run(){
-		ExecutableThread managerThread = null;
+//		ExecutableThread managerThread = null;
+//		try{
+//			managerThread = ExecutableThread.start(this.getManager());
+//		}catch(Exception e){
+//			System.err.println(e.getMessage());
+//			System.exit(0);
+//		}
+//		this.isRunning = true;
+//		System.err.println("TRY -> DAEDALUS");
+//		try{
+//			new Packet(Packet.COMMAND_MANAGER_STOP).toStream(managerThread.STDIN);
+//			new Packet(Packet.COMMAND_MANAGER_START).toStream(managerThread.STDIN);
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}System.err.println("TRY -> DAEDALUS 2");
+//		while(this.isRunning && managerThread.isRunning()){
+//			try{
+//				if(managerThread.STDOUT.available()>0){
+//					Packet p = Packet.fromStream(new LineInputStream(managerThread.STDOUT));
+//					this.onReceivePacket(p);
+//					p.toStream(managerThread.STDIN);
+//				}
+//				if(managerThread.STDERR.available()>0){
+//					byte[] buf = new byte[managerThread.STDERR.available()];
+//					managerThread.STDERR.read(buf);
+//					System.out.print(new String(buf));
+//					//System.out.println("["+buf.length+"] "+new String(buf).trim());
+//					//Thread.sleep(1000);
+//				}
+//			}catch(Exception e){
+//				e.printStackTrace();
+//			}
+//		}
+
 		try{
 			managerThread = ExecutableThread.start(this.getManager());
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 			System.exit(0);
 		}
-		this.isRunning = true;
-		while(this.isRunning && managerThread.isRunning()){
+		LineInputStream lis = new LineInputStream(managerThread.STDOUT);
+		LineInputStream temp = new LineInputStream(managerThread.STDERR);
+
+
+
+		try{
+			Log.debug(Daedalus.TAG,"Start manager");
+			new Packet("MANAGER_START").toStream(managerThread.STDIN);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		this.loop(lis,temp);
+	}
+
+	private void loop(LineInputStream in,LineInputStream err2){
+		Log.debug(TAG,"Joining loop");
+		while(this.isRunning){
 			try{
-				if(managerThread.STDERR.available()>0){
-					byte[] buf = new byte[managerThread.STDERR.available()];
-					managerThread.STDERR.read(buf);
-					System.out.print(new String(buf));
-					//System.out.println("["+buf.length+"] "+new String(buf).trim());
-					//Thread.sleep(1000);
+				//TEMP START
+				if(err2.available()>0){
+					System.err.print(new String(err2.readLine(true,true,true,false)));
 				}
-			}catch(Exception e){
+				//TEMP STOP
+				if(in.available()>0){
+					Log.debug(Daedalus.TAG,"Packet received");
+					Packet packet = null;
+					try{
+						packet = Packet.fromStream(in);
+					}catch(Exception e){
+						Log.error(Daedalus.TAG,"Invalid packet");
+					}
+					if(packet!=null){
+						this.onReceivePacket(packet);
+					}
+				}
+			}catch(IOException e){
 				e.printStackTrace();
 			}
 		}
+		Log.debug(Daedalus.TAG,"Quiting loop");
+	}
+
+	@Override
+	public void onReceivePacket(Packet packet){
+		if(Packet.COMMAND_MANAGER_START.equals(packet.getCommand())){
+			if(packet.isResponse()){
+				Log.info(Daedalus.TAG,"Started manager");
+				return;
+			}
+		}
+		if(Packet.COMMAND_DAEDALUS_START.equals(packet.getCommand())){
+			if(!packet.isResponse()){
+				Log.debug(Daedalus.TAG,"Starting Daedalus");
+				try{
+					new Packet(Packet.COMMAND_DAEDALUS_START,true).toStream(managerThread.STDIN);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				return;
+			}
+		}
+		if(Packet.COMMAND_BATTLE_CREATE.equals(packet.getCommand())){
+			if(!packet.isResponse()){
+				Log.debug(Daedalus.TAG,"Creating battle");
+				Battle battle = new Battle();
+				battle.setId((String) packet.getData().get("id"));
+				Game game = null;
+				for(Game g : Game.getGames(new File("games"))){
+					if(g.getName().equals(packet.getData().get("game"))){
+						game = g;
+						break;
+					}
+				}
+				if(game==null){
+					//TODO
+					Log.error(Daedalus.TAG,"Game '"+packet.getData().get("game")+"' not found");
+					return;
+				}
+				battle.setGame(game);
+				Referee referee = null;
+				for(Referee r : game.getReferees()){
+					if(r.getName().equals(packet.getData().get("referee"))){
+						referee = r;
+						break;
+					}
+				}
+				if(referee==null){
+					//TODO
+					Log.error(Daedalus.TAG,"Referee '"+packet.getData().get("referee")+"' not found for game '"+game.getName()+"'");
+					return;
+				}
+				battle.setReferee(referee);
+				JSONArray jsonArr = (JSONArray) packet.getData().get("players");
+				String[] playersStr = new String[jsonArr.length()];
+				for(int i=0;i<playersStr.length;i++){
+					playersStr[i] = jsonArr.getString(i);
+				}
+				Player[] players = new Player[playersStr.length];
+				for(int i=0;i<players.length;i++){
+					Player player = null;
+					for(Player p : game.getPlayers()){
+						if(p.getName().equals(playersStr[i])){
+							player = p;
+							break;
+						}
+					}
+					if(player==null){
+						//TODO
+						Log.error(Daedalus.TAG,"Player '"+playersStr[i]+"' not found for game '"+game.getName()+"'");
+						return;
+					}
+					players[i] = player;
+				}
+				battle.setPlayers(players);
+				this.battles.put(battle.getId(),new DaedalusBattle(battle));
+				try{
+					new Packet(Packet.COMMAND_BATTLE_CREATE,true).toStream(managerThread.STDIN);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				return;
+			}
+		}
+		if(Packet.COMMAND_BATTLE_START.equals(packet.getCommand())){
+			if(!packet.isResponse()){
+				Log.debug(Daedalus.TAG,"Starting battle");
+				String id = (String) packet.getData().get("id");
+				DaedalusBattle battle = battles.get(id);
+				new Thread(battle,"Battle "+battle.getBattle().getId()).start();
+				try{
+					new Packet(Packet.COMMAND_BATTLE_START,true).toStream(managerThread.STDIN);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				return;
+			}
+			Log.error(Daedalus.TAG,"The command '"+packet.getCommand()+"' should not be a response.");
+			return;
+		}
+		Log.warning(Daedalus.TAG,"Unknown command '"+packet.getCommand()+"'");
 	}
 
 	public static Daedalus getInstance(){

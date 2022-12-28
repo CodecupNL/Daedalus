@@ -6,13 +6,14 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import nl.codecup.daedalus.objects.Executable;
+import nl.codecup.daedalus.protocol.LineInputStream;
 
 public class ExecutableThread{
 	
 	private Process process;
 	
-	public final DataInputStream STDOUT;
-	public final DataInputStream STDERR;
+	public final LineInputStream STDOUT;
+	public final LineInputStream STDERR;
 	public final DataOutputStream STDIN;
 	
 	public final PrintStream PRINT;
@@ -21,8 +22,8 @@ public class ExecutableThread{
 		this.process = process;
 //		ShutdownHook.addProcess(this.process);
 				
-		this.STDOUT = new DataInputStream(this.process.getInputStream());
-		this.STDERR = new DataInputStream(this.process.getErrorStream());
+		this.STDOUT = new LineInputStream(this.process.getInputStream());
+		this.STDERR = new LineInputStream(this.process.getErrorStream());
 		this.STDIN = new DataOutputStream(this.process.getOutputStream());
 		
 		this.PRINT = new PrintStream(this.process.getOutputStream());
@@ -65,6 +66,12 @@ public class ExecutableThread{
 
 		//TODO Now only Java is supported
 		String[] command = new String[]{"java","-jar",executable.getFile().getAbsolutePath()};
+		if(executable.getName().endsWith(".exe")){
+			//TODO OR EXE
+			command = new String[]{executable.getFile().getAbsolutePath()};
+			System.err.println(executable.getFile().getAbsolutePath());
+			return new ExecutableThread(Runtime.getRuntime().exec(command));
+		}
 		return new ExecutableThread(Runtime.getRuntime().exec(command,new String[0],executable.getFile().getParentFile()));
 
 

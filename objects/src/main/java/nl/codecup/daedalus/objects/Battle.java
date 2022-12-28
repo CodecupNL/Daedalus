@@ -1,17 +1,57 @@
 package nl.codecup.daedalus.objects;
 
-import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.nio.ByteBuffer;
+import java.util.Arrays;
 
-//import nl.codecup.daedalus.protocol.ExecutableThread;
-//import nl.codecup.daedalus.protocol.Packet;
-//import nl.codecup.daedalus.protocol.Protocol;
-//import nl.codecup.daedalus.log.Log;
+public class Battle{
 
-public class Battle /*implements Runnable*/{
-	
-//	enum Status{
+	private String id;
+	private Game game;
+	private Referee referee;
+	private Player[] players;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Game getGame() {
+		return game;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
+	}
+
+	public Referee getReferee() {
+		return referee;
+	}
+
+	public void setReferee(Referee referee){
+		this.referee = referee;
+	}
+
+	public Player[] getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(Player[] players) {
+		this.players = players;
+	}
+
+	@Override
+	public String toString() {
+		return "Battle{" +
+				"id='" + id + '\'' +
+				", game='" + game + '\'' +
+				", referee='" + referee + '\'' +
+				", players=" + Arrays.toString(players) +
+				'}';
+	}
+
+	//	enum Status{
 //		CREATED,
 //		STARTED,
 //		STOPPED

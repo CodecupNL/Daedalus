@@ -28,4 +28,11 @@ public class Referee extends Executable{
 		return referee;
 	}
 
+	@Override
+	public String toString() {
+		return "Referee{" +
+				"file=" + file +
+				'}';
+	}
+
 }

@@ -55,41 +55,41 @@ public class Log{
 	public static void debug(String tag,String message){
 		Date d = new Date();
 		try{
-			Protocol.log(d,tag,Log.LEVEL_DEBUG,message).toStream(IO.STDOUT);
+//			Protocol.log(d,tag,Log.LEVEL_DEBUG,message).toStream(IO.STDOUT);
+			IO.STDERR.write((Ansi.ansi().fgBlue().a(Log.time(d)+" ["+tag+"] [DEBUG]: "+message).reset().toString()+"\n").getBytes());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		System.err.println(Ansi.ansi().fgBlue().a(Log.time(d)+" ["+tag+"] [DEBUG]: "+message).reset().toString());
 	}
 
 	public static void error(String tag,String message){
 		Date d = new Date();
 		try{
-			Protocol.log(d,tag,Log.LEVEL_ERROR,message).toStream(IO.STDOUT);
+//			Protocol.log(d,tag,Log.LEVEL_ERROR,message).toStream(IO.STDOUT);
+			IO.STDERR.write((Ansi.ansi().fgRed().a(Log.time(d)+" ["+tag+"] [ERROR]: "+message).reset().toString()+"\n").getBytes());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		System.err.println(Ansi.ansi().fgRed().a(Log.time(d)+" ["+tag+"] [ERROR]: "+message).reset().toString());
 	}
 
 	public static void info(String tag,String message){
 		Date d = new Date();
 		try{
-			Protocol.log(d,tag,Log.LEVEL_INFO,message).toStream(IO.STDOUT);
+//			Protocol.log(d,tag,Log.LEVEL_INFO,message).toStream(IO.STDOUT);
+			IO.STDERR.write((Ansi.ansi().fgBrightGreen().a(Log.time(d)+" ["+tag+"] [INFO]: "+message).reset().toString()+"\n").getBytes());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		System.err.println(Ansi.ansi().fgBrightGreen().a(Log.time(d)+" ["+tag+"] [INFO]: "+message).reset().toString());
 	}
 
 	public static void warning(String tag,String message){
 		Date d = new Date();
 		try{
-			Protocol.log(d,tag,Log.LEVEL_WARNING,message).toStream(IO.STDOUT);
+//			Protocol.log(d,tag,Log.LEVEL_WARNING,message).toStream(IO.STDOUT);
+			IO.STDERR.write((Ansi.ansi().fgYellow().a(Log.time(d)+" ["+tag+"] [WARNING]: "+message).reset().toString()+"\n").getBytes());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		System.err.println(Ansi.ansi().fgYellow().a(Log.time(d)+" ["+tag+"] [WARNING]: "+message).reset().toString());
 	}
 
 	private static String time(Date d){

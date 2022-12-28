@@ -21,6 +21,7 @@
 		<module>protocol</module>
 		<module>runner</module>
 		<module>wrapper</module>
+		<module>referee-converter</module>
 	</modules>
 
 	<properties>

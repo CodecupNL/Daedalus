@@ -6,7 +6,8 @@ public class Main{
 
 	public static void main(String... args){
 		AnsiConsole.systemInstall();
-		new Daedalus(args).run();
+		new Thread(new Daedalus(args),"Daedalus").start();
+//		new Daedalus(args).run();
 		AnsiConsole.systemUninstall();
 	}
 
