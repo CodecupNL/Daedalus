@@ -38,6 +38,9 @@ public class DaedalusManager implements PacketListener,Runnable{
 			byte[] line;
 			while((line = in.readLine(false,false,true,false))!=null){
 				String lineStr = new String(line).trim();
+				if(lineStr.isEmpty()){
+					continue;
+				}
 				if(lineStr.startsWith("#")){
 					continue;
 				}
@@ -117,9 +120,29 @@ public class DaedalusManager implements PacketListener,Runnable{
 		}
 		if(Packet.COMMAND_BATTLE_RESULT.equals(packet.getCommand())){
 			Log.info(DaedalusManager.TAG,"Result from battle");
+			try{
+				new Packet(Packet.COMMAND_BATTLE_RESULT,true).toStream(IO.STDOUT);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 			battleIndex++;
 			this.createGameBattle();
 //			this.resultBattle();
+			return;
+		}
+		if(Packet.COMMAND_DAEDALUS_STOP.equals(packet.getCommand())){
+			Log.info(DaedalusManager.TAG,"Stopped Daedalus");
+			return;
+		}
+		if(Packet.COMMAND_MANAGER_STOP.equals(packet.getCommand())){
+			Log.debug(DaedalusManager.TAG,"Stopping manager");
+			try{
+				new Packet(Packet.COMMAND_MANAGER_STOP,true).toStream(IO.STDOUT);
+				started = false;
+				this.isRunning = false;
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 			return;
 		}
 		Log.warning(DaedalusManager.TAG,"Unknown command '"+packet.getCommand()+"'");
@@ -139,8 +162,13 @@ public class DaedalusManager implements PacketListener,Runnable{
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-		}else{
-			Log.info(DaedalusManager.TAG,"No more battles to create. Ending.");
+			return;
+		}
+		Log.info(DaedalusManager.TAG,"No more battles to create. Ending.");
+		try{
+			new Packet(Packet.COMMAND_DAEDALUS_STOP).toStream(IO.STDOUT);
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 
 		//		if(Packet.COMMAND_LOG.equals(packet.getCommand())){

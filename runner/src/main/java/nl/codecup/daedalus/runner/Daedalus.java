@@ -437,6 +437,38 @@ public class Daedalus implements PacketListener,Runnable{
 			Log.error(Daedalus.TAG,"The command '"+packet.getCommand()+"' should not be a response.");
 			return;
 		}
+		if(Packet.COMMAND_BATTLE_RESULT.equals(packet.getCommand())){
+			if(packet.isResponse()){
+				Log.debug(Daedalus.TAG,"Result from battle confirmed");
+				return;
+			}
+			Log.error(Daedalus.TAG,"The command '"+packet.getCommand()+"' should be a response.");
+			return;
+		}
+		if(Packet.COMMAND_DAEDALUS_STOP.equals(packet.getCommand())){
+			if(!packet.isResponse()){
+				Log.debug(Daedalus.TAG,"Stopping Daedalus");
+				try{
+					new Packet(Packet.COMMAND_DAEDALUS_STOP,true).toStream(managerThread.STDIN);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				Log.debug(Daedalus.TAG,"Stop manager");
+				try{
+					new Packet(Packet.COMMAND_MANAGER_STOP).toStream(managerThread.STDIN);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				return;
+			}
+		}
+		if(Packet.COMMAND_MANAGER_STOP.equals(packet.getCommand())){
+			if(packet.isResponse()){
+				Log.info(Daedalus.TAG,"Stopped manager");
+				this.isRunning = false;//TODO Better place
+				return;
+			}
+		}
 		Log.warning(Daedalus.TAG,"Unknown command '"+packet.getCommand()+"'");
 	}
 

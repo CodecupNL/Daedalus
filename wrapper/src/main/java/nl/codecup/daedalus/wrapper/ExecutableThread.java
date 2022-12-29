@@ -1,6 +1,5 @@
 package nl.codecup.daedalus.wrapper;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -69,7 +68,6 @@ public class ExecutableThread{
 		if(executable.getName().endsWith(".exe")){
 			//TODO OR EXE
 			command = new String[]{executable.getFile().getAbsolutePath()};
-			System.err.println(executable.getFile().getAbsolutePath());
 			return new ExecutableThread(Runtime.getRuntime().exec(command));
 		}
 		return new ExecutableThread(Runtime.getRuntime().exec(command,new String[0],executable.getFile().getParentFile()));

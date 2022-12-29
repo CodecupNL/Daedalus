@@ -20,6 +20,7 @@ public class Packet{
 	public static String COMMAND_REFEREE_START = "REFEREE_START";
 	public static String COMMAND_PLAYER_START = "PLAYER_START";
 
+	public static String COMMAND_DAEDALUS_STOP = "DAEDALUS_STOP";
 	public static String COMMAND_MANAGER_STOP = "MANAGER_STOP";
 	public static String COMMAND_REFEREE_STOP = "REFEREE_STOP";
 	public static String COMMAND_PLAYER_STOP = "PLAYER_STOP";

@@ -18,8 +18,11 @@ public class DaedalusBattle implements Runnable{
 	private ExecutableThread refereeExe;
 	private ExecutableThread[] playersExe;
 
+	private String TAG;
+
 	public DaedalusBattle(Battle battle){
 		this.battle = battle;
+		this.TAG = "BATTLE/"+this.battle.getId();
 	}
 
 	public Battle getBattle() {
@@ -30,7 +33,7 @@ public class DaedalusBattle implements Runnable{
 
 	@Override
 	public void run(){
-		System.err.println("Start the loop of battle "+battle.getId());
+		Log.warning(this.TAG,"Start loop of battle");
 		try{
 			this.refereeExe = ExecutableThread.start(this.battle.getReferee());
 		}catch(IOException e){
@@ -55,14 +58,14 @@ public class DaedalusBattle implements Runnable{
 			try{
 				String line = new String(this.refereeExe.STDOUT.readLine(true,true,true,false)).trim();
 				char ident = line.charAt(0);
-				Log.error("BATTLE/"+battle.getId(),"Line = "+line);
+				Log.error(this.TAG,"Line = "+line);
 				if(ident=='1' || ident=='2'){
-					System.err.println("To Player: "+ident);
+//					System.err.println("To Player: "+ident);
 					this.playersExe[Integer.parseInt(ident+"")-1].STDIN.write((line.substring(2)+"\n").getBytes());
 					try {
 						this.playersExe[Integer.parseInt(ident + "") - 1].STDIN.flush();
 					}catch(Exception e){
-						Log.warning("BATTLE/"+battle.getId(),"FLUSH ERROR 1");
+						Log.warning(this.TAG,"FLUSH ERROR 1");
 						//e.printStackTrace();
 					}
 					continue;
@@ -88,9 +91,7 @@ public class DaedalusBattle implements Runnable{
 					points[0] = Integer.parseInt(parts[2]);
 					points[1] = Integer.parseInt(parts[3]);
 
-
 					Map<String,Object> data = new HashMap<>();
-
 
 					data.put("id",battle.getId());
 					data.put("ranks",ranks);
@@ -99,31 +100,31 @@ public class DaedalusBattle implements Runnable{
 					break;
 				}
 				if(ident=='I' && line.substring(2).equals("lock")){
-					System.err.println("LOCK OK");
+//					System.err.println("LOCK OK");
 					this.refereeExe.STDIN.write("lock_ok\n".getBytes());
 					try{
 						this.refereeExe.STDIN.flush();
 					}catch(Exception e){
 
-						Log.warning("BATTLE/"+battle.getId(),"FLUSH ERROR 2");
+						Log.warning(this.TAG,"FLUSH ERROR 2");
 						//e.printStackTrace();
 					}
 					continue;
 				}
 				if(ident=='I' && line.substring(2).equals("unlock")){
-					System.err.println("UNLOCK OK");
+//					System.err.println("UNLOCK OK");
 					continue;
 				}
 				if(ident=='I' && line.substring(2,8).equals("listen")){
 					char ident2 = line.charAt(9);
-					System.err.println("LISTEN OK = "+ident2);
+//					System.err.println("LISTEN OK = "+ident2);
 					String line2 = new String(this.playersExe[Integer.parseInt(ident2+"")-1].STDOUT.readLine(true,true,true,false)).trim();
 
 					this.refereeExe.STDIN.write((line2+"\n").getBytes());
 					try{
 						this.refereeExe.STDIN.flush();
 					}catch(Exception e){
-						Log.warning("BATTLE/"+battle.getId(),"FLUSH ERROR 3");
+						Log.warning(this.TAG,"FLUSH ERROR 3");
 						//e.printStackTrace();
 					}
 					continue;
