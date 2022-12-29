@@ -1,9 +1,7 @@
 package nl.codecup.daedalus.runner;
 
 import nl.codecup.daedalus.objects.Battle;
-import nl.codecup.daedalus.objects.Executable;
 import nl.codecup.daedalus.objects.Log;
-import nl.codecup.daedalus.protocol.LineInputStream;
 import nl.codecup.daedalus.protocol.Packet;
 import nl.codecup.daedalus.wrapper.ExecutableThread;
 

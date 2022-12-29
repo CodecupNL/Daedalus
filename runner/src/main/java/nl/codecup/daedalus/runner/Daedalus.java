@@ -347,6 +347,8 @@ public class Daedalus implements PacketListener,Runnable{
 				Log.info(Daedalus.TAG,"Started manager");
 				return;
 			}
+			Log.error(Daedalus.TAG,"The command '"+packet.getCommand()+"' should be a response.");
+			return;
 		}
 		if(Packet.COMMAND_DAEDALUS_START.equals(packet.getCommand())){
 			if(!packet.isResponse()){
@@ -358,6 +360,8 @@ public class Daedalus implements PacketListener,Runnable{
 				}
 				return;
 			}
+			Log.error(Daedalus.TAG,"The command '"+packet.getCommand()+"' should not be a response.");
+			return;
 		}
 		if(Packet.COMMAND_BATTLE_CREATE.equals(packet.getCommand())){
 			if(!packet.isResponse()){
@@ -420,6 +424,8 @@ public class Daedalus implements PacketListener,Runnable{
 				}
 				return;
 			}
+			Log.error(Daedalus.TAG,"The command '"+packet.getCommand()+"' should not be a response.");
+			return;
 		}
 		if(Packet.COMMAND_BATTLE_START.equals(packet.getCommand())){
 			if(!packet.isResponse()){
@@ -461,6 +467,8 @@ public class Daedalus implements PacketListener,Runnable{
 				}
 				return;
 			}
+			Log.error(Daedalus.TAG,"The command '"+packet.getCommand()+"' should not be a response.");
+			return;
 		}
 		if(Packet.COMMAND_MANAGER_STOP.equals(packet.getCommand())){
 			if(packet.isResponse()){
@@ -468,6 +476,8 @@ public class Daedalus implements PacketListener,Runnable{
 				this.isRunning = false;//TODO Better place
 				return;
 			}
+			Log.error(Daedalus.TAG,"The command '"+packet.getCommand()+"' should be a response.");
+			return;
 		}
 		Log.warning(Daedalus.TAG,"Unknown command '"+packet.getCommand()+"'");
 	}

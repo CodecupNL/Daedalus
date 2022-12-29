@@ -85,64 +85,91 @@ public class DaedalusManager implements PacketListener,Runnable{
 	@Override
 	public void onReceivePacket(Packet packet){
 		if(Packet.COMMAND_MANAGER_START.equals(packet.getCommand())){
-			if(!DaedalusManager.started){
-				Log.debug(DaedalusManager.TAG,"Start Daedalus");
-				try{
-					new Packet(Packet.COMMAND_DAEDALUS_START).toStream(IO.STDOUT);
-				}catch(Exception e){
-					e.printStackTrace();
+			if(!packet.isResponse()){
+				if(!DaedalusManager.started){
+					Log.debug(DaedalusManager.TAG,"Start Daedalus");
+					try{
+						new Packet(Packet.COMMAND_DAEDALUS_START).toStream(IO.STDOUT);
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+					Log.debug(DaedalusManager.TAG,"Starting manager");
+					try{
+						new Packet(Packet.COMMAND_MANAGER_START,true).toStream(IO.STDOUT);
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+					DaedalusManager.started = true;
+					return;
 				}
-				Log.debug(DaedalusManager.TAG,"Starting manager");
-				try{
-					new Packet(Packet.COMMAND_MANAGER_START,true).toStream(IO.STDOUT);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-				DaedalusManager.started = true;
+				Log.info(DaedalusManager.TAG,"Manager already started. Ignoring this.");
 				return;
 			}
-			Log.info(DaedalusManager.TAG,"Manager already started. Ignoring this.");
+			Log.error(DaedalusManager.TAG,"The command '"+packet.getCommand()+"' should not be a response.");
 			return;
 		}
 		if(Packet.COMMAND_DAEDALUS_START.equals(packet.getCommand())){
-			Log.info(DaedalusManager.TAG,"Started Daedalus");
-			this.createGameBattle();
+			if(packet.isResponse()){
+				Log.info(DaedalusManager.TAG,"Started Daedalus");
+				this.createGameBattle();
+				return;
+			}
+			Log.error(DaedalusManager.TAG,"The command '"+packet.getCommand()+"' should be a response.");
 			return;
 		}
 		if(Packet.COMMAND_BATTLE_CREATE.equals(packet.getCommand())){
-			Log.info(DaedalusManager.TAG,"Created battle");
-			this.startGameBattle();
+			if(packet.isResponse()){
+				Log.info(DaedalusManager.TAG,"Created battle");
+				this.startGameBattle();
+				return;
+			}
+			Log.error(DaedalusManager.TAG,"The command '"+packet.getCommand()+"' should be a response.");
 			return;
 		}
 		if(Packet.COMMAND_BATTLE_START.equals(packet.getCommand())){
-			Log.info(DaedalusManager.TAG,"Started battle");
+			if(packet.isResponse()){
+				Log.info(DaedalusManager.TAG,"Started battle");
+				return;
+			}
+			Log.error(DaedalusManager.TAG,"The command '"+packet.getCommand()+"' should be a response.");
 			return;
 		}
 		if(Packet.COMMAND_BATTLE_RESULT.equals(packet.getCommand())){
-			Log.info(DaedalusManager.TAG,"Result from battle");
-			try{
-				new Packet(Packet.COMMAND_BATTLE_RESULT,true).toStream(IO.STDOUT);
-			}catch(Exception e){
-				e.printStackTrace();
+			if(!packet.isResponse()){
+				Log.info(DaedalusManager.TAG,"Result from battle");
+				try{
+					new Packet(Packet.COMMAND_BATTLE_RESULT,true).toStream(IO.STDOUT);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				battleIndex++;
+				this.createGameBattle();
+				return;
 			}
-			battleIndex++;
-			this.createGameBattle();
-//			this.resultBattle();
+			Log.error(DaedalusManager.TAG,"The command '"+packet.getCommand()+"' should not be a response.");
 			return;
 		}
 		if(Packet.COMMAND_DAEDALUS_STOP.equals(packet.getCommand())){
-			Log.info(DaedalusManager.TAG,"Stopped Daedalus");
+			if(packet.isResponse()){
+				Log.info(DaedalusManager.TAG,"Stopped Daedalus");
+				return;
+			}
+			Log.error(DaedalusManager.TAG,"The command '"+packet.getCommand()+"' should be a response.");
 			return;
 		}
 		if(Packet.COMMAND_MANAGER_STOP.equals(packet.getCommand())){
-			Log.debug(DaedalusManager.TAG,"Stopping manager");
-			try{
-				new Packet(Packet.COMMAND_MANAGER_STOP,true).toStream(IO.STDOUT);
-				started = false;
-				this.isRunning = false;
-			}catch(Exception e){
-				e.printStackTrace();
+			if(!packet.isResponse()){
+				Log.debug(DaedalusManager.TAG,"Stopping manager");
+				try{
+					new Packet(Packet.COMMAND_MANAGER_STOP,true).toStream(IO.STDOUT);
+					started = false;
+					this.isRunning = false;
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				return;
 			}
+			Log.error(DaedalusManager.TAG,"The command '"+packet.getCommand()+"' should not be a response.");
 			return;
 		}
 		Log.warning(DaedalusManager.TAG,"Unknown command '"+packet.getCommand()+"'");
